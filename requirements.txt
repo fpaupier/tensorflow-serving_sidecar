@@ -16,7 +16,6 @@ Markdown==3.0.1
 matplotlib==3.0.2
 more-itertools==4.3.0
 mpmath==1.0.0
-muscima==0.3.2
 numpy==1.15.4
 omrdatasettools==0.13
 opencv-python==3.4.4.19
