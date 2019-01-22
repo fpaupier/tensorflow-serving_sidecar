@@ -6,6 +6,9 @@ object_detection/core/__pycache__/
 object_detection/protos/__pycache__/
 object_detection/utils/__pycache__/
 
+# Ignore protos
+object_detection/protos/
+
 .idea/
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
