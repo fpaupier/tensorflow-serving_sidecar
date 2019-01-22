@@ -1,7 +1,5 @@
 ## Project installation
 
-### COCO API installation
-(Not Necessary) #FIXME
 
 ### Protobuf Compilation
 The Tensorflow Object Detection API uses Protobufs to configure model and training parameters. 
@@ -30,19 +28,6 @@ procedure:
  3. Go to the protobuf folder `cd protobuf-3.6.1/`
  4. Install with `./configure  && make && make check && make install` _Note: This may take several minutes._
    
-
-### Add Libraries to PYTHONPATH
-When running locally, the tensorflow/models/research/ and slim directories should be appended to PYTHONPATH. 
-This can be done by running the following root directory of this project:
-```bash
-# From tensorflow/models/research/
-export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-```
-Note: This command needs to run from every new terminal you start. 
-If you wish to avoid running this manually, you can add it as a new line to the end of your ~/.bashrc file,
-replacing `pwd` with the absolute path of tensorflow/models/research on your system.
-
-
 ## Notes
 
 The `object_detection` and `slim` directory come from the
