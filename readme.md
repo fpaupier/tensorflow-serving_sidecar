@@ -50,9 +50,9 @@ vboxmanage controlvm default natpf1 "nameformapping,tcp,,8501,,8501"
 ```
 
 ```bash
-python client.py --server_url="http://localhost:8501/v1/models/fasterrcnn:predict" \
---image_path="/Users/fpaupier/Desktop/horse.jpg" \
---output_json="/Users/fpaupier/Desktop/out_horse.json" \
---save_output_image="True" \
---label_map="/Users/fpaupier/projects/tensorflow-serving_sidecar/labels.pbtxt"
+python client.py --server_url "http://localhost:8501/v1/models/fasterrcnn:predict" \
+--image_path "$(pwd)/object_detection/test_images/image1.jpg" \
+--output_json "/Users/fpaupier/Desktop/out_horse.json" \
+--save_output_image "True" \
+--label_map "$(pwd)/data/labels.pbtxt"
 ```
