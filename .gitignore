@@ -1,6 +1,10 @@
 .DS_Store
 data/faster_rcnn_resnet101_coco_2018_01_28/
 __pychache__
+object_detection/__pycache__/
+object_detection/core/__pycache__/
+object_detection/protos/__pycache__/
+object_detection/utils/__pycache__/
 
 .idea/
 
