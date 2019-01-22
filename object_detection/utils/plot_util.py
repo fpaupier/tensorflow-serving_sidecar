@@ -6,6 +6,7 @@ import argparse
 import json
 
 from PIL import Image
+from object_detection.utils import ops as utils_ops, label_map_util, visualization_utils as vis_util
 
 
 def load_image_into_numpy_array(img):
