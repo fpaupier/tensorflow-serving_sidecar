@@ -30,10 +30,16 @@ procedure:
    
 ## Notes
 
-The `object_detection` and `slim` directory come from the
-[tensorflow-model](https://github.com/tensorflow/models) repository.
+The `object_detection` directory comes from the
+[tensorflow-model](https://github.com/tensorflow/models) repository. 
+I use it because it offers useful utils to mark tage the image sent to the model.
+
+Feel free to investigate the models on the `tensorflow-model` repo since they are well documented and often provide tutorials to fit your needs.
 
 
+
+----
+ ### Cheatsheet
 useful commands:
 
 (on macOS)
