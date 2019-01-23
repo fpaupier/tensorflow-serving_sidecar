@@ -185,4 +185,4 @@ tensorflow-serving_sidecar/
 
 ```
 
-We are done with the setup and we can proceed with serving our first model. [Return to the main Readme](../readme.md) to continue the tutorial.
+We are done with the setup and we can proceed with serving our first model. In the next doc you will [make your first inference using tensorflow-serving](tf_server_local.md).
