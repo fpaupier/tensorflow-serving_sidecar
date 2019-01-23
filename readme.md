@@ -1,5 +1,31 @@
 ## Project installation
 
+A few steps are required to test your `tf-serving` API call.
+
+### Create a Python virtualenv
+
+using virtual environment is highly recommended to avoid polluting your python system distribution.
+
+**Note** This project runs on `Python 3.6.5`. It has not been tested with `Python 3.7.z`.
+Stick to `Python 3.6.5` if you want to be able to replicate all the results.
+
+1. Create a python virtual environment with `venv`, name it as you wish, for example `tf_client`. 
+Replace the path to your desired virtualenv accordingly.
+```bash
+`which python3.6` -m venv /PATH/TO/tf_client
+```
+
+2. Set your python source to be the `Python 3.6.5` virtualenv named `tf_serving` you just created:
+```bash
+source /PATH/TO/tf_client/bin/activate
+```
+**NB:** From now on, assume that every python command is run from this virtual env. 
+
+3. Install the python packages required for the project. Run the following at the root of the project directory:
+```bash
+# in tensorflow-serving_sidecar/
+pip install -r requirements.txt
+``` 
 
 ### Protobuf Compilation
 The Tensorflow Object Detection API uses Protobufs to configure model and training parameters. 
@@ -28,14 +54,13 @@ procedure:
  3. Go to the protobuf folder `cd protobuf-3.6.1/`
  4. Install with `./configure  && make && make check && make install` _Note: This may take several minutes._
    
-## Notes
+## Credits
 
 The `object_detection` directory comes from the
 [tensorflow-model](https://github.com/tensorflow/models) repository. 
 I use it because it offers useful utils to mark tage the image sent to the model.
 
 Feel free to investigate the models on the `tensorflow-model` repo since they are well documented and often provide tutorials to fit your needs.
-
 
 
 ----
