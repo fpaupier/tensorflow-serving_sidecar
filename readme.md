@@ -49,7 +49,7 @@ procedure:
 
 ##### On Linux
 
- 1. Get the .zip wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip` 
+ 1. Get the .zip `wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip`
  2. Unzip it `unzip protobuf-all-3.6.1.zip`
  3. Go to the protobuf folder `cd protobuf-3.6.1/`
  4. Install with `./configure  && make && make check && make install` _Note: This may take several minutes._
