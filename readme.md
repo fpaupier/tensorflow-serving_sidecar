@@ -1,45 +1,26 @@
 # Serve your machine learning model with `tensorflow-serving`
 
-This project provides material to serve your tensorflow models with `tensorflow-serving`. I describe installation steps
-to quickly get up and running. You will learn how to serve an object detection model on with tensorflow serving, 
-first on local and then on cloud instances. 
+This project provides material to serve your tensorflow models with `tensorflow-serving`.
+It can be followed as a step-by-step tutorial to serve your machine learning model fro people familiar with the stack but 
+who don't really know the detail and in which order the stuff should be done to serve a model.
 
-## Install the project
+
+I describe installation steps to quickly get up and running. You will learn how to serve an object detection model with tensorflow serving,
+first on local and then on cloud instances. In this tutorial I rely on a pre-trained object detection model freely available on tensorflow's official GitHub.
+
+I enumerate the various possibilities of serving a tensorflow model and compare the pros and cons of each method.
+
+## 0. Install the project
 
 The installation process is thoroughly described in the [docs/setup.md](docs/setup.md). It covers everything you need to do
 prior being able to serve a model with tensorflow-serving.
 
-## Create a local tensorflow server and make your first API call
+## 1. Serve your first model and perform inference with tensorflow-serving
 
-This will help you make sure you installed everything correctly. 
+_Time to test!_
 
-1. Run the tensorflow server, pay attention to forward the port `8501` and bind the correct path.
-Fine tune the `-v` arg if you use a different model.
-```bash
-# From tensorflow-serving_sidecar/
-docker run -t --rm -p 8501:8501 \
-   -v "$(pwd)/data/faster_rcnn_resnet101_coco_2018_01_28:/models/faster_rcnn_resnet" \
-   -e MODEL_NAME=faster_rcnn_resnet \
-   tensorflow/serving &
-```
-
-2. Call the server to perform an inference. Fine tune the `--server_url` argument if you use a different model.
-The `client.py` script is a very simple script to pre-process the input image, perform the API call, and process the server's output. 
-It returns detections score and build the annotated image. 
-
-```bash
-# From tensorflow-serving_sidecar/
-python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resnet:predict" \
---image_path "$(pwd)/object_detection/test_images/image1.jpg" \
---output_json "$(pwd)/object_detection/test_images/out_image1.json" \
---save_output_image "True" \
---label_map "$(pwd)/data/labels.pbtxt"
-```
-
-If everything works fine you should have an image generated under `object_detection/test_images/out_image1.jpeg`.
-With the provided model and example it should look like:
-![Output image based on the inference results from the model](assets/out_image1.jpeg) 
-
+To make sure the installation went smoothly, get your first inference result from the object detection model and tensorflow serving.
+Follow the basic tutorial to serve a tensorflow model on your machine [docs/tf_server_local.md](docs/tf_server_local.md).
 
 ----
 
