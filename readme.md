@@ -22,7 +22,31 @@ _Time to test!_
 To make sure the installation went smoothly, get your first inference result from the object detection model and tensorflow serving.
 Follow the basic tutorial to serve a tensorflow model on your machine [docs/tf_server_local.md](docs/tf_server_local.md).
 
-----
+## 2. Deploy your model on the cloud for high availability
+
+Now that we made sure our inference server works great on local, let's deploy it on the cloud so it can be actually consumed by 
+other APIs. Let's dive in the [detailed how-to](docs/tf_server_k8s.md)
+
+**Pros**
+- Relatively easy update with kubernetes update
+
+**Cons**
+- Need coordination between Ops and Data Scientists to deploy new model 
+
+
+## 3. A managed solution - Google Cloud ML Engine 
+
+Google proposes a managed solution - _Google Cloud ML Engine_ - to serve your `saved_models.pb` models. 
+I do not focus on it since [google documentation](https://cloud.google.com/ml-engine/docs/tensorflow/deploying-models) is
+a more comprehensive source of information.
+
+**Pros**
+- Easily deploy new models
+
+**Cons**
+- Less flexibility
+
+----------
 
 ## Credits
 
