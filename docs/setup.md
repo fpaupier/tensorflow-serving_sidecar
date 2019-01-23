@@ -185,4 +185,4 @@ tensorflow-serving_sidecar/
 
 ```
 
-We are done with the setup and we can proceed with serving our first model.
+We are done with the setup and we can proceed with serving our first model. [Return to the main Readme](../readme.md) to continue the tutorial.
