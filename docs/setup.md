@@ -7,8 +7,9 @@ I detail the installation process step by step :
 2. Setup a working python environment
 3. Install Google Protocol Buffers libraries
 4. Get tensorflow serving image
+5. Download a sample model for serving
 
-## Install docker
+## 1. Install docker
 
 _Skip this step if you already have Docker installed on your machine_
 
@@ -59,7 +60,7 @@ sudo apt-get update
 sudo apt-get --yes install docker-ce=17.12.1~ce-0~ubuntu
 ````
 
-## Create a Python virtualenv
+## 2. Create a Python virtualenv
 
 using virtual environment is highly recommended to avoid polluting your python system distribution.
 
@@ -76,15 +77,17 @@ Replace the path to your desired virtualenv accordingly.
 ```bash
 source /PATH/TO/tf_client/bin/activate
 ```
-**NB:** From now on, assume that every python command is run from this virtual env. 
+**NB:** From now on, assume that every python command used in this project should be run from this virtual env. 
+- Especially call to the client code `client.py`.
+
 
 3. Install the python packages required for the project. Run the following at the root of the project directory:
 ```bash
-# in tensorflow-serving_sidecar/
+# From tensorflow-serving_sidecar/
 pip install -r requirements.txt
 ``` 
 
-### Install Protobuf
+## 3. Install Protobuf
 The Tensorflow Object Detection API uses Protobufs to configure model and training parameters. 
 Before the framework can be used, the Protobuf libraries must be compiled. 
 
@@ -106,7 +109,7 @@ procedure:
  3. Go to the protobuf folder `cd protobuf-3.6.1/`
  4. Install with `./configure  && make && make check && make install` _Note: This may take several minutes._
  
-## Protobuf Compilation
+### Protobuf Compilation
 
 Once the installation is complete you ca compile the protobufer librairies with `protoc`, 
 it should be done by running the following command from the root directory of this project:
@@ -114,10 +117,72 @@ it should be done by running the following command from the root directory of th
 protoc object_detection/protos/*.proto --python_out=.
 ```
 
-## Get `tensorflow-serving` docker image
+## 4. Get `tensorflow-serving` docker image
 Download the TensorFlow Serving Docker image
 ```bash
 docker pull tensorflow/serving
 ```
+We will use this image to serve our model.
 
-We are now done with the setup and we can proceed with serving our first model.
+## 5. Download a sample model for serving
+
+If you don't have a `savedModel.pb` ready to be served you can download several models from
+[the tensorflow model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
+)
+In this tuto I will work with the the [faster_rcnn_resnet101_coco model](http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2018_01_28.tar.gz)
+
+1. Download the dataset (_e.g._ [faster_rcnn_resnet101_coco model](http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2018_01_28.tar.gz)
+2. Decompress the archive
+3. Move the model folder (_e.g._ `faster_rcnn_resnet101_coco_2018_01_28`) under `tensorflow-serving_sidecar/data/`.
+The interesting file for serving a model is the `saved_model.pb` file. (The checkpoint and model files are useful if you 
+want to resume training from an a pre-trained model). Your path should look like 
+```
+tensorflow-serving_sidecar/
+ |
+ |--data/
+ |     |
+ |     |--labels.pbtxt
+ |     |
+ |     |--faster_rcnn_resnet101_coco_2018_01_28/
+ |             |
+ |             |--saved_model/
+ |             |   |
+ |             |   |-saved_model.pb     <-- Here 
+ |             |   |
+ |             |   |-variables/
+ |             |
+ |             |--checkpoint
+ |             |
+ |            ...
+ |
+ |--docs/
+ |
+...
+
+```
+4. Tensorflow serving will search for a model to serve in this directory. Tensorflow serving expects to find model with a directory name being version number.
+Rename the folder `saved_model` into a folder named `00001` and discard the rest of the directory. The project path should now look like:
+tensorflow-serving_sidecar/
+```
+ |
+ |--data/
+ |     |
+ |     |--labels.pbtxt
+ |     |
+ |     |--faster_rcnn_resnet101_coco_2018_01_28/
+ |             |
+ |             |--00001/
+ |                |
+ |                |-saved_model.pb 
+ |                |
+ |                |-variables/
+ |             
+ |     
+ |
+ |--docs/
+ |
+...
+
+```
+
+We are done with the setup and we can proceed with serving our first model.
