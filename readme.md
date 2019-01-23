@@ -1,6 +1,68 @@
-## Project installation
+# Serve your machine learning model with `tensorflow-serving`
 
-A few steps are required to test your `tf-serving` API call.
+This project provides material to serve your tensorflow models with `tensorflow-serving`. I describe installation steps
+to quickly get up and running. You will learn how to serve an object detection model on with tensorflow serving, 
+first on local and then on cloud instances. 
+
+## Project setup
+
+A few steps are required to test setup your local working environment.
+I detail the installation process step by step :
+
+1. Install docker
+2. Setup a working python environment
+3. Install Google Protocol Buffers libraries
+
+### Install docker
+
+_Skip this step if you already have Docker installed on your machine_
+
+`tensorflow-serving` is provided by google as a containerized application. We will use `Docker` to create and run our machine
+learning applications containers.
+ 
+##### On MacOS
+
+With Homebrew
+
+1. Install docker `brew install docker`
+2. Install docker-machine `brew install docker-machine`
+3. Start the docker-machine daemon `brew services start docker-machine`
+4. Install virtualbox `brew install virtualbox`, you may need to grant the app permission for this step,
+ in "System Preferences" -> "Security & Privacy": give permission for the installation. 
+5. Create a default docker machine with `docker-machine create default --virtualbox-cpu-count 4 --virtualbox-memory 8192`
+You can fine tune the machine settings but this one will be ok for our use case.
+6. Set your environment variable with `eval $(docker-machine env default)`. This step is needed every time you open a new shell.
+
+
+This last point is specific to our use case, we need to correctly forward the port `8501` of our container to the port `8501` of our localhost.
+We need to do it only once. To do so:
+```bash
+vboxmanage controlvm default natpf1 "portforwarding,tcp,,8501,,8501"
+``` 
+
+##### On Linux
+
+1.  Add Docker’s official GPG key
+````bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+````
+2.  Get the stable repository
+````bash
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+````
+
+3. Update apt-get
+````bash
+sudo apt-get update
+````
+
+4. Install
+````bash
+sudo apt-get --yes install docker-ce=17.12.1~ce-0~ubuntu
+````
 
 ### Create a Python virtualenv
 
@@ -27,15 +89,10 @@ source /PATH/TO/tf_client/bin/activate
 pip install -r requirements.txt
 ``` 
 
-### Protobuf Compilation
+#### Installing Protobuf
 The Tensorflow Object Detection API uses Protobufs to configure model and training parameters. 
 Before the framework can be used, the Protobuf libraries must be compiled. 
-This should be done by running the following command from the root directory of this project:
-```bash
-protoc object_detection/protos/*.proto --python_out=.
-```
 
-#### Installing Protobuf
 If you don't have protobuf installed on your machine, you can install it by following the following
 procedure:
 
@@ -53,32 +110,28 @@ procedure:
  2. Unzip it `unzip protobuf-all-3.6.1.zip`
  3. Go to the protobuf folder `cd protobuf-3.6.1/`
  4. Install with `./configure  && make && make check && make install` _Note: This may take several minutes._
+ 
+### Protobuf Compilation
+
+Once the installation is complete you ca compile the protobufer librairies with `protoc`, 
+it should be done by running the following command from the root directory of this project:
+```bash
+protoc object_detection/protos/*.proto --python_out=.
+```
+
    
 ## Credits
 
 The `object_detection` directory comes from the
 [tensorflow-model](https://github.com/tensorflow/models) repository. 
-I use it because it offers useful utils to mark tage the image sent to the model.
+It offers useful `utils` functions to tag the image returned from the model.
 
 Feel free to investigate the models on the `tensorflow-model` repo since they are well documented and often provide tutorials to fit your needs.
 
 
 ----
  ### Cheatsheet
-useful commands:
-
-(on macOS)
-
-1. Docker machine related
-```bash
-docker-machine start default
-eval "$(docker-machine env default)"
-```
-
-Open port of your docker machine
-```bash
-vboxmanage controlvm default natpf1 "nameformapping,tcp,,8501,,8501"
-```
+useful commands
 
 ```bash
 python client.py --server_url "http://localhost:8501/v1/models/fasterrcnn:predict" \
