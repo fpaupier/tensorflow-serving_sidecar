@@ -10,6 +10,9 @@ object_detection/utils/__pycache__/
 object_detection/test_images/out_image1.json
 object_detection/test_images/out_image1.jpeg
 
+object_detection/test_images/out_image2.jpeg
+object_detection/test_images/out_image2.json
+
 # Ignore protos
 object_detection/protos/
 

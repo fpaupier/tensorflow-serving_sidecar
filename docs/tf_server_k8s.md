@@ -28,8 +28,13 @@ docker cp $(pwd)/data/faster_rcnn_resnet101_coco_2018_01_28 serving_base:/models
 ```bash
 docker commit --change "ENV MODEL_NAME faster_rcnn_resnet" serving_base faster_rcnn_resnet_serving
 ```
-`faster_rcnn_resnet_serving` will be our new serving image
 _Note:_ if you use a different model, change `faster_rcnn_resnet` in the `--change` argument accordingly.
+
+`faster_rcnn_resnet_serving` will be our new serving image.
+You can check this by running `docker images`, you should see a new docker image:
+
+![faster_rcnn_resnet_serving new docker image](../assets/docker_images_tf.png)
+
 
 4. Stop the serving base container
 ```bash
