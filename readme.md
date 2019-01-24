@@ -16,8 +16,8 @@ Unleash the power of GCP to get a highly scalable machine learning server runnin
 
 *The proposed object detection model is here to get you started quickly, feel free to use yours for more fun!*
 
-The audience for this tuto are people familiar with the notions of tensorflow (especially the `savedModel`),
-knowing docker or kubernetes is not a pre-requisite since the commands used are simple and explained when needed.
+The reader is expected to be familiar with tensorflow, know the basics of how to export a model for inference (`tensorflow-server` works with `savedModel`).
+Knowing docker or kubernetes are not pre-requisites since the commands used are simple and explained when needed.
 
 Those tutorials are highly inspired from [tensorflow-serving official documentation](https://www.tensorflow.org/serving/docker)
 with some tips and more detail on the installation process. 
