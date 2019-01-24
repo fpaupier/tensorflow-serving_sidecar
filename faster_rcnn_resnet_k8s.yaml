@@ -16,30 +16,30 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: resnet-deployment
+  name: faster-rcnn-resnet-deployment
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
-        app: resnet-server
+        app: faster-rcnn-resnet-server
     spec:
       containers:
-      - name: resnet-container
-        image: gcr.io/tensorflow-serving/resnet
-        ports:
-        - containerPort: 8500
+        - name: faster-rcnn-resnet-container
+          image: gcr.io/tensorflow-serving-229609/faster_rcnn_resnet_serving@sha256:9f7eca6da7d833b240f7c54b630a9f85df8dbdfe46abe2b99651278dc4b13c53
+          ports:
+            - containerPort: 8501
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: resnet-service
-  name: resnet-service
+    run: faster-rcnn-resnet-service
+  name: faster-rcnn-resnet-service
 spec:
   ports:
-  - port: 8500
-    targetPort: 8500
+    - port: 8501
+      targetPort: 8501
   selector:
-    app: resnet-server
+    app: faster-rcnn-resnet-server
   type: LoadBalancer
