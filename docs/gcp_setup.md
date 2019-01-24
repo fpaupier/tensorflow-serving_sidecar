@@ -54,8 +54,9 @@ you login to your GCP account and select the working project to be `tensorflow-s
 
 ![gcloud init choose project](../assets/gcloud_init_choose_project.png)
 
-Great you now have your default `gcloud` configuration!
+5. You may also need `kubectl` to manage your kubernetes cluster on GCP, install it with `gcloud components install kubectl`.
 
+Great you now have your default `gcloud` configuration!
 
 ----
 ### Resources:
@@ -63,3 +64,5 @@ Great you now have your default `gcloud` configuration!
 - As the documentation evolves quickly you may want yo refer to the official documentation to complete on how to install `gcloud` 
     - for MacOs: https://cloud.google.com/sdk/docs/quickstart-macos
     - for Linux: https://cloud.google.com/sdk/docs/quickstart-linux
+
+- list of available GCP ``zones`` https://cloud.google.com/compute/docs/regions-zones/
