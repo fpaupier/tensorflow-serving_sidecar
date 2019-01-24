@@ -1,7 +1,7 @@
 # How to serve your machine learning model with `tensorflow-serving`
 
-This repo provides material to serve your tensorflow models with `tensorflow-serving`.
-It can be followed as a step-by-step tutorial to serve your ``tensorflow`` model. 
+This repo offers detailed _How-to_ about serving your tensorflow models with `tensorflow-serving`.
+It can be followed as a step-by-step tutorial to serve your ``tensorflow`` model or other models with some adjustments. 
 
 ### What's in the box?
 
