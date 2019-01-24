@@ -13,6 +13,9 @@ object_detection/test_images/out_image1.jpeg
 object_detection/test_images/out_image2.jpeg
 object_detection/test_images/out_image2.json
 
+object_detection/test_images/out_image3.jpeg
+object_detection/test_images/out_image3.json
+
 # Ignore protos
 object_detection/protos/
 
