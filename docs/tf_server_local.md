@@ -37,10 +37,12 @@ python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resne
 If everything works fine you should have an image generated under `object_detection/test_images/out_image1.jpeg`.
 With the provided model and example it should look like:
 ![Output image based on the inference results from the model](../assets/out_image1.jpeg) 
+Congrats, you just built your first tensorflow server.
 
-Great, we can now dive into more elaborate setup, [return to the main Readme](../readme.md) to check different ways to serve your models.
+---- 
+## What's next?
 
-----
+Now that you master how to serve a model on local, let's go bigger and serve this model on the cloud 
+ so you can actually use it in your other applications or on your website! 
 
-This contents is basically an application of the tensorflow serving documentation with a custom model.
-See https://www.tensorflow.org/serving/ for more reference
+Learn how to deploy a tensorflow model on Google Compute Platform with [this tutorial](tf_server_k8s.md).
