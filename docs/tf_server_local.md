@@ -1,6 +1,7 @@
 # Create a local tensorflow server and call it for inference
 
-This will help you make sure you installed everything correctly.
+Finalize your setup by running your first tensorflow-server on local.
+You will be able to make object detection over `jpeg` images in a few minutes!
 
 1. Run the tensorflow server, pay attention to forward the port `8501` and bind the correct path.
 Fine tune the `-v` arg if you use a different model.
@@ -14,18 +15,20 @@ docker run -t --rm -p 8501:8501 \
 _What did we just do there?_ 
 
 We simply run a docker container from the original `tensorflow-server` image. We bind the directory on the local host filesystem containing our `faster_rcnn_resnet101_coco_2018_01_28`
- model with the `models/` directory inside the container. The container can read and write data in/from this shared directory. 
+ model with the `models/` directory inside the container. The container can read and write data from this shared directory. 
 
 This simple drawing sums it up:
  
  ![docker run -v drawing](../assets/docker_run_v.jpg) 
 
-2. Now that we have a local server up and running we call him on port `8501`.
+2. Now that we have a local server running we call call it on `localhost:8501`.
 Call the server to perform an inference. Fine tune the `--server_url` argument if you use a different model.
 The `client.py` script is a very simple script to pre-process the input image, perform the API call, and process the server's output. 
 It returns detections score and build the annotated image. 
 
 ```bash
+# Don't forget to activate your python3.6.5 virtualenv
+
 # From tensorflow-serving_sidecar/
 python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resnet:predict" \
 --image_path "$(pwd)/object_detection/test_images/image1.jpg" \
@@ -37,7 +40,9 @@ python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resne
 If everything works fine you should have an image generated under `object_detection/test_images/out_image1.jpeg`.
 With the provided model and example it should look like:
 ![Output image based on the inference results from the model](../assets/out_image1.jpeg) 
-Congrats, you just built your first tensorflow server.
+
+Congrats, you just built your first tensorflow server!
+Go ahead and try with your own `.jpeg` images! You can fine tune the client code if you want to work with other kind of images.
 
 ---- 
 ## What's next?
