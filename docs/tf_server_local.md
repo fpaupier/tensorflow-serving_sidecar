@@ -27,7 +27,7 @@ The `client.py` script is a very simple script to pre-process the input image, p
 It returns detections score and build the annotated image. 
 
 ```bash
-# Don't forget to activate your python3.6.5 virtualenv
+# Don't forget to activate your python3.6.5 venv
 
 # From tensorflow-serving_sidecar/
 python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resnet:predict" \
