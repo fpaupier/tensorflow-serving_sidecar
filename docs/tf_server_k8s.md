@@ -1,9 +1,29 @@
 # Deploy a tensorflow-server on the cloud
 
-At the end of this step you will have a kubernetes cluster exposing your model for inference.
+Previously we saw how to serve a tensorflow model on local. 
+One might say, "Great! Let's just run it on a cloud instance, open the correct ports and tada! I am serving my model worldwide!".
+This approach may be ok for a testing purpose, or a just side project of yours but I strongly advise against it.
+Your server can be easily overwhelmed and security issues will quickly arise. 
+
+In a production setting you want to be sure to scale correctly as the load is increasing on your app. You don't want 
+your server to be overwhelmed like in the drawing below:
+![tensorflow server cannot cope with the load](../assets/tf_server_no_balance.png)
+
+
+To avoid this issue, this tutorial will teach you how to use a kubernetes cluster to serve your tensorflow-server app.
+The load will be balanced among your replicas without you having to thing about it. 
+You want to deploy a new model with no down time? Sure, kubernetes got your back. Perform a rolling update to progressively serve your new model
+while gracefully terminating the current requests on the former model.
+
+![](../assets/k8s_load_balance.png)
+
+
+At the end of this tutorial you will have a kubernetes cluster exposing your model for inference.
 To reach this goal, the steps are:
 1. Create a docker image with with your `saved_model.pb` file embedded.
 2. Deploy in kubernetes.
+
+Alright, let's dive into it
 
 ## 1. Create a docker image with with your `saved_model.pb` file embedded.
 
@@ -187,8 +207,3 @@ ________
 - More resources on Docker `bind` mount is available on [Docker bind official docs](https://docs.docker.com/storage/bind-mounts/).
 - To understand how the docker `commit` command works, refer to the [Docker commit official doc](https://docs.docker.com/engine/reference/commandline/commit/).
 - Google Container registry documentation, https://cloud.google.com/container-registry/docs/
-
----------
-
-_Note:_ This tutorial comes from the [tensorflow-serving official documentation](https://www.tensorflow.org/serving/serving_kubernetes),
-I adapted it to fit our use case (different model used).
