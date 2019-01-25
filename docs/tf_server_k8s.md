@@ -44,7 +44,7 @@ docker run -d --name serving_base tensorflow/serving
 # From tensorflow-serving_sidecar/
 docker cp $(pwd)/data/faster_rcnn_resnet101_coco_2018_01_28 serving_base:/models/faster_rcnn_resnet
 ```
-3. Commit the container to serving the `faster_rcnn_resnet` model:
+3. Commit the container to serve the `faster_rcnn_resnet` model:
 ```bash
 docker commit --change "ENV MODEL_NAME faster_rcnn_resnet" serving_base faster_rcnn_resnet_serving
 ```
