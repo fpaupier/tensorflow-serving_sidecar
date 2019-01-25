@@ -187,7 +187,7 @@ tensorflow-serving_sidecar/
 We are done with the setup!
 We can proceed with serving our first model.
  
-
+---- 
 ## What's next?
 
 Deploy an object detection prediction server on local with tensorflow-serving --> [tf-serving local](tf_server_local.md).
