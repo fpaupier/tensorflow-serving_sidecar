@@ -48,7 +48,7 @@ Let's dive in the [docs/tf_server_k8s.md](docs/tf_server_k8s.md).
 
 ----------
 
-## Resources 
+### Resources 
 
 Additional information you may find useful
 
@@ -64,7 +64,9 @@ a more comprehensive source of information.
 - Less flexibility
 - As of today, you are limited in size for your `savedModel.pb` file to `250 MB`. (That may change) 
 
-## Credits
+----------
+
+### Credits
 
 The `object_detection` directory comes from the
 [tensorflow-model](https://github.com/tensorflow/models) repository. 
