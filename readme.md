@@ -3,6 +3,12 @@
 This repo offers detailed _How-to_ about serving your tensorflow models with `tensorflow-serving`.
 It can be followed as a step-by-step tutorial to serve your ``tensorflow`` model or other models with some adjustments. 
 
+### Scope of the project
+I do not cover the parts of training or exporting models here.
+I focus solely on serving a model for inference.
+![Pipe overview](/assets/pipe_overview.png)
+
+
 ### What's in the box?
 
 Two tutorials: 
@@ -16,7 +22,7 @@ Unleash the power of GCP to get a highly scalable machine learning server runnin
 
 *The proposed object detection model is here to get you started quickly, feel free to use yours for more fun!*
 
-The reader is expected to be familiar with tensorflow, know the basics of how to export a model for inference (`tensorflow-server` works with `savedModel`).
+The reader is expected to be familiar with tensorflow, knowing how to export a model for inference will be helpful (`tensorflow-server` works with `savedModel`).
 Knowing docker or kubernetes are not pre-requisites since the commands used are simple and explained when needed.
 
 Those tutorials are highly inspired from [tensorflow-serving official documentation](https://www.tensorflow.org/serving/docker)
