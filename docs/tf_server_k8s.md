@@ -1,11 +1,11 @@
 # Deploy a tensorflow-server on the cloud
 
 Previously we saw how to serve a tensorflow model on local. 
-One might say, "Great! Let's just run it on a cloud instance, open the correct ports and tada! I am serving my model worldwide!".
-This approach may be ok for a testing purpose, or a just side project of yours but I strongly advise against it.
+One might say, "Great! Let's just run it on a cloud instance, open the correct ports and tadaa! I am serving my model worldwide!".
+This approach may be ok for testing purposes or for a side project of yours, but I strongly advise against it.
 Your server can be easily overwhelmed and security issues will quickly arise. 
 
-In a production setting you want to be sure to scale correctly as the load is increasing on your app. You don't want 
+In a production setting, you want to be sure to scale correctly as the load is increasing on your app. You don't want 
 your server to be overwhelmed like in the drawing below:
 ![tensorflow server cannot cope with the load](../assets/tf_server_no_balance.png)
 
@@ -27,7 +27,7 @@ Alright, let's dive into it
 
 ## 1. Create a docker image with with your `saved_model.pb` file embedded.
 
-You remember the docker image we used to run tensorflow-serving and perform inference with our object detection model in our [local example](tf_server_local.md)
+The docker image we used to run tensorflow-serving in [local example](tf_server_local.md)
 shared the model data with the host filesystem. We will now build a self-sufficient image that contains the model.
    
 We take the tensorflow-serving base image and add our model in order to deploy on Kubernetes.
@@ -84,6 +84,8 @@ python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resne
 --label_map "$(pwd)/data/labels.pbtxt"
 ``` 
 
+Ok let's run this on a ``kubernetes`` cluster now.
+
 ## 2. Deploy our app on kubernetes
 
 The following steps are done with Google Cloud Platform - _GCP_. If you are new to GCP, the 300$ free initial credit are more than enough to complete those tasks.
@@ -110,12 +112,12 @@ gcloud auth login
 2. Create a container cluster
  - First we create a [Google Kubernetes Engine](https://cloud.google.com/container-engine/) cluster for service deployment.
 Due to the free trial limitation you cannot do more than 2 nodes here, you can either upgrade or go with the two nodes which will be
-good enough for our use case. 
+good enough for our use case. (_You are limited to a quota of 8 CPUs in your free trial._)
  ```bash
 gcloud container clusters create faster-rcnn-serving-cluster --num-nodes 2 --zone 'us-east1'
 ```
 You may update the `zone` arg, you can choose among _e.g_: `europe-west1`, `asia-east1` - You check all the zones available with `gcloud compute zones list`.
-_Note:_ You are limited to a quota of 8 CPUs in your free trial.
+
 ![Cluster initialization](../assets/cluster_creation.png)
 
 3. Set the default cluster for gcloud container command and pass cluster credentials to [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/).
@@ -123,15 +125,17 @@ _Note:_ You are limited to a quota of 8 CPUs in your free trial.
 gcloud config set container/cluster faster-rcnn-serving-cluster
 gcloud container clusters get-credentials faster-rcnn-serving-cluster --zone 'us-east1'
 ```
+You should have something like this afterwards:
+
 ![credentials handling](../assets/kube.png)
 
 
 4. Upload the custom tensorflow-serving docker image we built previously.
-Let's now push our image to the [Google Container Registry](https://cloud.google.com/container-registry/docs/)
+Let's push our image to the [Google Container Registry](https://cloud.google.com/container-registry/docs/)
  so that we can run it on Google Cloud Platform.
 
 First we tag the `faster_rcnn_resnet_serving` image using the Container Registry format and our project id, change
-the `tensorflow-serving-229609` with your project_id.
+the `tensorflow-serving-229609` with your project_id. Also change the tag at the end, here it's our first version so I set the tag to `v0.1.0`.
 ````bash
 docker tag faster_rcnn_resnet_serving gcr.io/tensorflow-serving-229609/faster_rcnn_resnet_serving:v0.1.0
 
