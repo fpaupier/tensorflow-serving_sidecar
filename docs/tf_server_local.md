@@ -1,4 +1,4 @@
-# Create a local tensorflow server and make your first API call
+# Create a local tensorflow server and call it for inference
 
 This will help you make sure you installed everything correctly.
 
