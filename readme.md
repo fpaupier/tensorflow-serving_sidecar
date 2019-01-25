@@ -70,5 +70,5 @@ The `object_detection` directory comes from the
 [tensorflow-model](https://github.com/tensorflow/models) repository. 
 It offers useful `utils` functions to tag the image returned from the model.
 
-Feel free to investigate the models on the `tensorflow-model` repo since they are well documented and often provide tutorials to fit your needs.
+Feel free to investigate the models on the `tensorflow-model` repo since they are well documented and often comes with useful tutorials.
 
