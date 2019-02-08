@@ -12,6 +12,68 @@ from object_detection.utils import label_map_util
 import object_detection.utils.ops as utils_ops
 from PIL import Image
 
+def format_mask(detection_masks, detection_boxes, N, image_size):
+    """
+    Format the m*m detection soft masks as full size binary masks. 
+
+    Args:
+        detection_masks (np.array): of size N * m * m
+        detection_boxes (np.array): of size N * 4 with the normalized bow coordinates.
+            Coordinates are written as [y_min, x_min, y_max, x_max]
+        N (int): number of detections in the image
+        image_size (tuple(int))
+
+    Returns:
+        detection_masks (np.array): of size N * H * W  where H and W are the image Height and Width.
+    
+    """
+    (height, width, _) = image_size
+    
+    # Process the masks related to the N objects detected in the image
+    for i in range(N):
+        normalized_mask = detection_masks[i].astype(np.float32)
+        normalized_mask = Image.fromarray(normalized_mask, 'F')
+
+        # Boxes are expressed with 4 scalars - normalized coordinates [y_min, x_min, y_max, x_max]
+        [y_min, x_min, y_max, x_max] = detection_boxes[i]
+
+        # Compute absolute boundary of box
+        box_size = (int((x_max - x_min) * width), int((y_max - y_min) * height)) 
+
+        # Resize the mask to the box size using LANCZOS appoximation
+        resized_mask = normalized_mask.resize(box_size, Image.LANCZOS)
+        
+        # Convert back to array
+        resized_mask = np.array(resized_mask).astype(np.float32)
+
+        # Binarize the image by using a fixed threshold
+        binary_mask_box = np.zeros(resized_mask.shape)
+        thresh = 0.5
+        h, w = box_size
+        for i in range(h):
+            for j in range(w):
+                if resized_mask[i][j] >= thresh:
+                    binary_mask_box[i][j] = 1
+
+        binary_mask_box = binary_mask_box.astype(np.int8)
+
+        # Replace the mask in the context of the original image size
+        binary_mask = np.zeros((height, width))
+        
+        x_min_at_scale = int(x_min * width)
+        y_min_at_scale = int(y_min * height)
+
+        d_x = int((x_max - x_min) * width)
+        d_y = int((y_max - y_min) * height)
+
+        for x in range(d_x):
+            for y in range(d_y):
+                binary_mask[y_min_at_scale + y][x_min_at_scale + x] = binary_mask_box[y][x] 
+
+        detection_masks[i] = binary_mask
+
+    return detection_masks
+
 def load_image_into_numpy_array(image):
   (im_width, im_height) = image.size
   return np.array(image.getdata()).reshape(
@@ -39,12 +101,13 @@ def pre_process(image_path):
     return formatted_json_input
 
 
-def post_process(server_response):
+def post_process(server_response, image_size):
     """
     Post-process the server response
 
     Args:
         server_response (requests.Response)
+        image_size (tuple(int))
 
     Returns:
         post_processed_data (dict)
@@ -64,6 +127,8 @@ def post_process(server_response):
         # Determine a threshold above wihc we consider the pixel shall belong to the mask
         # thresh = 0.5
         output_dict['detection_masks'] = np.array(output_dict['detection_masks'])
+        output_dict['detection_masks'] = format_mask(output_dict['detection_masks'], output_dict['detection_boxes'], output_dict['num_detections'], image_size)
+    
     return output_dict
 
 
@@ -103,7 +168,9 @@ if __name__ == '__main__':
 
     # Post process output
     print(f'\n\nPost-processing server response...\n')
-    output_dict = post_process(server_response)
+    image = Image.open(image_path).convert("RGB")
+    image_np = load_image_into_numpy_array(image)
+    output_dict = post_process(server_response, image_np.shape)
     print(f'Post-processing done!\n')
 
     # Save output on disk
@@ -114,10 +181,6 @@ if __name__ == '__main__':
 
     if save_output_image:
         # Save output on disk
-        print('\n\nBuilding output image\n\n')
-        image = Image.open(image_path).convert("RGB")
-        image_np = load_image_into_numpy_array(image)
-
         category_index = label_map_util.create_category_index_from_labelmap(path_to_labels, use_display_name=True)
 
         # Visualization of the results of a detection.
