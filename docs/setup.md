@@ -24,7 +24,7 @@ With Homebrew
 4. Install virtualbox `brew install virtualbox`, you may need to grant the app permission for this step,
  in "System Preferences" -> "Security & Privacy": give permission for the installation. 
 5. Create a default docker machine with `docker-machine create default --virtualbox-cpu-count 4 --virtualbox-memory 8192`
-You can fine tune the machine settings but this one will be ok for our use case.
+Here I use 5 CPUs because my machine has 4, adapt accordingly. Also note that `8192` Mb is enough for our model but may be insufficient for more demanding ones.  
 6. Set your environment variable with `eval $(docker-machine env default)`. This step is needed every time you open a new shell.
 
 
