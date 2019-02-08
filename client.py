@@ -8,7 +8,14 @@ import numpy as np
 import requests
 from object_detection.utils import visualization_utils as vis_util
 from object_detection.utils import plot_util
+from object_detection.utils import label_map_util
+import object_detection.utils.ops as utils_ops
 from PIL import Image
+
+def load_image_into_numpy_array(image):
+  (im_width, im_height) = image.size
+  return np.array(image.getdata()).reshape(
+      (im_height, im_width, 3)).astype(np.uint8)
 
 
 def pre_process(image_path):
@@ -43,16 +50,21 @@ def post_process(server_response):
         post_processed_data (dict)
     """
     response = json.loads(server_response.text)
-    post_processed_data = response['predictions'][0]
+    output_dict = response['predictions'][0]
 
-    # post process classes
-    detections_classes = post_processed_data['detection_classes']
-    formatted_detection_classes = [int(class_id) for class_id in detections_classes]
-    post_processed_data['detection_classes'] = formatted_detection_classes
+    # all outputs are float32 numpy arrays, so convert types as appropriate
 
-    # post process num detections
-    post_processed_data['num_detections'] = int(post_processed_data['num_detections'])
-    return post_processed_data
+    output_dict['num_detections'] = int(output_dict['num_detections'])
+    output_dict['detection_classes'] = np.array([int(class_id) for class_id in output_dict['detection_classes']])
+    output_dict['detection_boxes'] = np.array(output_dict['detection_boxes'])
+    output_dict['detection_scores'] = np.array(output_dict['detection_scores'])
+
+    # Process detection mask
+    if 'detection_masks' in output_dict:
+        # Determine a threshold above wihc we consider the pixel shall belong to the mask
+        # thresh = 0.5
+        output_dict['detection_masks'] = np.array(output_dict['detection_masks'])
+    return output_dict
 
 
 if __name__ == '__main__':
@@ -91,35 +103,34 @@ if __name__ == '__main__':
 
     # Post process output
     print(f'\n\nPost-processing server response...\n')
-    post_processed_data = post_process(server_response)
+    output_dict = post_process(server_response)
     print(f'Post-processing done!\n')
 
     # Save output on disk
     print(f'\n\nSaving output to {output_image}\n\n')
     with open(output_image, 'w+') as outfile:
-        json.dump(post_processed_data, outfile)
+        json.dump(json.loads(server_response.text), outfile)
     print(f'Output saved!\n')
 
     if save_output_image:
         # Save output on disk
         print('\n\nBuilding output image\n\n')
         image = Image.open(image_path).convert("RGB")
-        image_np = plot_util.load_image_into_numpy_array(image)
+        image_np = load_image_into_numpy_array(image)
 
-        category_index = plot_util.load_category_index(path_to_labels, 99999)  # FIXME: Magic number to replace by meaningful var
+        category_index = label_map_util.create_category_index_from_labelmap(path_to_labels, use_display_name=True)
 
         # Visualization of the results of a detection.
         vis_util.visualize_boxes_and_labels_on_image_array(
             image_np,
-            np.array(post_processed_data['detection_boxes']),  # NOTE: np.array needed for .shape property
-            post_processed_data['detection_classes'],
-            post_processed_data['detection_scores'],
+            output_dict['detection_boxes'],
+            output_dict['detection_classes'],
+            output_dict['detection_scores'],
             category_index,
-            instance_masks=post_processed_data.get('detection_masks'),
+            instance_masks=output_dict.get('detection_masks'),
             use_normalized_coordinates=True,
-            line_thickness=2,
-        )
-
+            line_thickness=8,
+            )
         output_with_no_extension = output_image.split('.', 1)[0]
         output_image = ''.join([output_with_no_extension, '.jpeg'])
         Image.fromarray(image_np).save(output_image)
