@@ -28,7 +28,7 @@ def format_mask(detection_masks, detection_boxes, N, image_size):
     
     """
     (height, width, _) = image_size
-    
+    output_masks = np.zeros((N, image_size[0], image_size[1]))
     # Process the masks related to the N objects detected in the image
     for i in range(N):
         normalized_mask = detection_masks[i].astype(np.float32)
@@ -49,13 +49,14 @@ def format_mask(detection_masks, detection_boxes, N, image_size):
         # Binarize the image by using a fixed threshold
         binary_mask_box = np.zeros(resized_mask.shape)
         thresh = 0.5
-        h, w = box_size
-        for i in range(h):
-            for j in range(w):
-                if resized_mask[i][j] >= thresh:
-                    binary_mask_box[i][j] = 1
+        (h, w) = resized_mask.shape
 
-        binary_mask_box = binary_mask_box.astype(np.int8)
+        for k in range(h):
+            for j in range(w):
+                if resized_mask[k][j] >= thresh:
+                    binary_mask_box[k][j] = 1
+
+        binary_mask_box = binary_mask_box.astype(np.uint8)
 
         # Replace the mask in the context of the original image size
         binary_mask = np.zeros((height, width))
@@ -69,10 +70,13 @@ def format_mask(detection_masks, detection_boxes, N, image_size):
         for x in range(d_x):
             for y in range(d_y):
                 binary_mask[y_min_at_scale + y][x_min_at_scale + x] = binary_mask_box[y][x] 
+        
+        # Update the masks array
+        output_masks[i][:][:] = binary_mask
 
-        detection_masks[i] = binary_mask
-
-    return detection_masks
+    # Cast mask as integer
+    output_masks = output_masks.astype(np.uint8)
+    return output_masks
 
 def load_image_into_numpy_array(image):
   (im_width, im_height) = image.size
