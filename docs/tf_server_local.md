@@ -7,9 +7,11 @@ You will be able to make object detection over `jpeg` images in a few minutes!
 Fine tune the `-v` arg if you use a different model.
 ```bash
 # From tensorflow-serving_sidecar/
+MODEL_DIR_NAME=faster_rcnn_resnet101_coco_2018_01_28
+MODEL_NAME=faster_rcnn_resnet
 docker run -t --rm -p 8501:8501 \
-   -v "$(pwd)/data/faster_rcnn_resnet101_coco_2018_01_28:/models/faster_rcnn_resnet" \
-   -e MODEL_NAME=faster_rcnn_resnet \
+   -v "$(pwd)/data/$MODEL_DIR_NAME:/models/$MODEL_NAME" \
+   -e MODEL_NAME=$MODEL_NAME \
    tensorflow/serving &
 ```
 _What did we just do there?_ 
@@ -30,7 +32,9 @@ It returns detections score and build the annotated image.
 # Don't forget to activate your python3.6.5 venv
 
 # From tensorflow-serving_sidecar/
-python client.py --server_url "http://localhost:8501/v1/models/faster_rcnn_resnet:predict" \
+MODEL_NAME=faster_rcnn_resnet
+
+python client.py --server_url "http://localhost:8501/v1/models/$MODEL_NAME:predict" \
 --image_path "$(pwd)/object_detection/test_images/image1.jpg" \
 --output_json "$(pwd)/object_detection/test_images/out_image1.json" \
 --save_output_image "True" \
